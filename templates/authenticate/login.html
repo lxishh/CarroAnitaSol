@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+  </head>
+  <body class="container mt-4">
+    <!-- Logo de la empresa -->
+    <div class="mb-4">
+      <img
+        src="{% static 'logo.png' %}"
+        alt="Logo de la empresa"
+        style="width: 180px; height: auto"
+      />
+    </div>
+
+    <!-- Título de la página -->
+    <div class="text-center mb-4">
+      <h1 class="display-5"><strong>Inicio de Sesión</strong></h1>
+
+      {% if messages %} {% for message in messages%}
+      <div
+        class="alert alert-warning alert-dismissible fade show w-50 mx-auto"
+        role="alert"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+          data-bs-dismiss="alert"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %} {% endif %}
+    </div>
+
+    <!-- Formulario de login -->
+    <form action="" method="POST" class="w-50 mx-auto">
+      {% csrf_token %}
+      <!-- Campo de usuario -->
+      <div class="mb-3">
+        <label for="username" class="form-label"
+          ><strong>Nombre de Usuario</strong></label
+        >
+        <input
+          type="text"
+          class="form-control alert-info"
+          name="username"
+          placeholder="Ingrese su nombre de usuario"
+        />
+      </div>
+      <!-- Campo de contraseña -->
+      <div class="mb-3">
+        <label for="password" class="form-label"
+          ><strong>Contraseña</strong></label
+        >
+        <input
+          type="password"
+          class="form-control alert-info"
+          name="password"
+          placeholder="Ingrese su contraseña"
+        />
+      </div>
+      <!-- Botón de enviar -->
+      <div class="text-center">
+        <button type="submit" class="btn btn-info">
+          <strong>Ingresar</strong>
+        </button>
+      </div>
+    </form>
+    <!-- Cargar Bootstrap JS desde el static -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>

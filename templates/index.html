@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+  </head>
+  <body class="container mt-4">
+    <!-- Logo de la empresa -->
+    <div class="mb-4">
+      <img
+        src="{% static 'logo.png'%}"
+        alt="Logo de la empresa"
+        style="width: 180px; height: auto"
+      />
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class="d-flex flex-column align-items-center">
+      <a
+        href="{% url 'logout' %}"
+        class="alert alert-danger text-center w-25 mb-3"
+      >
+        <strong>Cerrar Sesión</strong>
+      </a>
+      <a
+        href="{% url 'menuopciones' %}"
+        class="alert alert-info text-center w-25 mb-3"
+      >
+        <strong>Menu Principal</strong>
+      </a>
+    </div>
+    {% else %}
+    <!-- Mensaje de bienvenida -->
+    <div class="text-center mb-4">
+      {% if messages %} {% for message in messages%}
+      <div
+        class="alert alert-warning alert-dismissible fade show w-25 mx-auto"
+        role="alert"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+          data-bs-dismiss="alert"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %} {% endif %}
+      <h1 class="display-4"><strong>¡Bienvenido!</strong></h1>
+      <p class="lead"><strong>¿Cómo deseas ingresar?</strong></p>
+    </div>
+
+    <!-- Opciones de ingreso apiladas -->
+    <div class="d-flex flex-column align-items-center">
+      <a
+        href="{% url 'login' %}"
+        class="alert alert-info text-center w-25 mb-3"
+      >
+        <strong>Propietaria</strong>
+      </a>
+      <a href="{% url 'login' %}" class="alert alert-info text-center w-25">
+        <strong>Vendedor(a)</strong>
+      </a>
+    </div>
+    {% endif %}
+    <!-- Cargar Bootstrap JS desde el static -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>

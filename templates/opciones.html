@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Opciones</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+  </head>
+  <body class="container mt-4">
+    <!-- Logo de la empresa -->
+    <div class="mb-4 text-center">
+      <a href="{% url 'home' %}">
+        <img
+          src="{% static 'logo.png' %}"
+          alt="Logo de la empresa"
+          style="width: 180px; height: auto"
+        />
+      </a>
+    </div>
+
+    <!-- Título de la página -->
+    <div class="text-center mb-4">
+      <h1 class="display-5"><strong>Menú Principal</strong></h1>
+    </div>
+
+    <!-- Opciones -->
+    <div class="d-flex flex-column align-items-center">
+      <a
+        href="{% url 'productos' %}"
+        class="alert alert-info text-center w-50 mb-3"
+      >
+        <strong>Productos</strong>
+      </a>
+      <a
+        href="{% url 'productos' %}"
+        class="alert alert-info text-center w-50 mb-3"
+      >
+        <strong>Ventas</strong>
+      </a>
+      <a
+        href="{% url 'productos' %}"
+        class="alert alert-info text-center w-50 mb-3"
+      >
+        <strong>Vendedores</strong>
+      </a>
+      <a href="/ingresos" class="alert alert-info text-center w-50">
+        <strong>Ingresos</strong>
+      </a>
+    </div>
+    <!-- Cargar Bootstrap JS desde el static -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>
