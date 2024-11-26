@@ -44,8 +44,8 @@ INSTALLED_APPS = [
     'usuarios',
     'productos',
     'widget_tweaks',
-    # 'inventario',
-    # 'ventas'
+    'ventas',
+    'inventario',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,30 @@
+{% block content %}
+<h1>Lista de Ventas</h1>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Vendedora</th>
+      <th>Fecha</th>
+      <th>Total</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for venta in ventas %}
+    <tr>
+      <td>{{ venta.id }}</td>
+      <td>{{ venta.vendedora.user.username }}</td>
+      <td>{{ venta.fecha }}</td>
+      <td>{{ venta.total }}</td>
+      <td>
+        <a href="{% url 'ver_venta' venta.pk %}">Ver</a>
+        <a href="{% url 'actualizar_venta' venta.pk %}">Editar</a>
+        <a href="{% url 'eliminar_venta' venta.pk %}">Eliminar</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{% url 'crear_venta' %}">Crear Venta</a>
+{% endblock %}
