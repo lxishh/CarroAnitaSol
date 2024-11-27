@@ -3,7 +3,7 @@ from productos.forms import FormularioProducto, FormularioCategoria
 from productos.models import Producto, Categoria
 from django.contrib import messages
 
-from usuarios.models import Usuario
+from vendedores.models import Usuario
 
 #create
 def registrar_producto(request):

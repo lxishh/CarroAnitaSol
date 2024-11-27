@@ -1,7 +1,7 @@
 from django.db import models
 from productos.models import Producto
 from django.utils.timezone import now
-from usuarios.models import Vendedora 
+from vendedores.models import Vendedora 
 
 class Venta(models.Model):
     vendedora = models.ForeignKey(Vendedora, on_delete=models.CASCADE)  # Quién realizó la venta
