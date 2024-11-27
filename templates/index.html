@@ -9,9 +9,9 @@
   </head>
   <body class="container mt-4">
     <!-- Logo de la empresa -->
-    <div class="mb-4">
+    <div class="mb-4 text-center">
       <img
-        src="{% static 'logo.png'%}"
+        src="{% static 'logo.png' %}"
         alt="Logo de la empresa"
         style="width: 180px; height: auto"
       />
@@ -20,16 +20,16 @@
     {% if user.is_authenticated %}
     <div class="d-flex flex-column align-items-center">
       <a
-        href="{% url 'logout' %}"
-        class="alert alert-danger text-center w-25 mb-3"
-      >
-        <strong>Cerrar Sesión</strong>
-      </a>
-      <a
         href="{% url 'menuopciones' %}"
         class="alert alert-info text-center w-25 mb-3"
       >
         <strong>Menu Principal</strong>
+      </a>
+      <a
+        href="{% url 'logout' %}"
+        class="alert alert-danger text-center w-25 mb-3"
+      >
+        <strong>Cerrar Sesión</strong>
       </a>
     </div>
     {% else %}
@@ -37,7 +37,7 @@
     <div class="text-center mb-4">
       {% if messages %} {% for message in messages%}
       <div
-        class="alert alert-warning alert-dismissible fade show w-25 mx-auto"
+        class="alert alert-success alert-dismissible fade show w-50 mx-auto"
         role="alert"
       >
         {{ message }}

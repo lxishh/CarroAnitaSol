@@ -11,8 +11,67 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
       rel="stylesheet"
     />
+    <!-- CSS para cambiar color de de los enlaces y boton -->
+  <style>
+    /* Cambia el color de los enlaces en el hover */
+    .navbar-nav .nav-link:hover {
+      color: #f5c6cb; /* Cambia el color del texto al rosa */
+    }
+    .btn-outline-light:hover {
+      background-color: #f5c6cb; /* Cambia el fondo del botón al rosa */
+      color: black; /* Cambia el texto a negro */
+    }
+  .navbar-brand:hover {
+      color: #f5c6cb; /* El color de hover (puedes cambiarlo si lo deseas) */
+    }
+  </style>
   </head>
   <body>
+ <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'menuopciones' %}">Inicio</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- OPCIONES QUE HAY EN LA NAV BAR -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'productos' %}">Productos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'ventas' %}">Ventas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'ventas' %}">Inventario</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'ventas' %}">Ingresos</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <!-- Solo mostrar esta opción en el html de productos -->
+          {% if request.path == '/productos/listado/' %}  
+          <!-- (Aqui se debe cambiar la url en donde se quiere mostrar) -->
+            <a class="btn btn-outline-light btn-sm me-2" href="{% url 'registrarcategoria' %}">Agregar Categoria</a>
+            <!-- Aqui se debe cambiar la url del href dependiendo de donde queremos redirigirnos -->
+          </li>
+          {% endif %}
+          <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
     <div class="container my-4">
       <!-- Logo y cabecera -->
       <div class="d-flex justify-content-between align-items-center mb-4">
@@ -40,11 +99,21 @@
         <!-- Información del propietario -->
         <div class="text-end">
           <i class="bi bi-person-fill" style="color: black; margin-right: 5px; font-size: 2.5rem;"></i> 
-          <strong>Propietario</strong>
+          <strong>
+            {% if rol == 'Propietaria' %}
+              Propietaria
+            {% elif rol == 'Vendedora' %}
+              Vendedora
+            {% elif user.is_superuser %}
+              Administrador
+            {% else %}
+              Usuario
+            {% endif %}
+          </strong>
         </div>
       </div>
 
-      <!-- Formulario para filtros -->
+      <!-- Formulario para filtrar por Categoria -->
       <form method="get" class="mb-3 mt-5">
         <div class="row">
           <div class="col-md-4">
@@ -83,10 +152,10 @@
               <tr>
                 <th class="table-danger">ID</th>
                 <th class="table-danger">Nombre</th>
+                <th class="table-danger">Categoría</th>
                 <th class="table-danger">Descripción</th>
                 <th class="table-danger">Cantidad</th>
                 <th class="table-danger">Precio</th>
-                <th class="table-danger">Categoría</th>
                 <th class="table-danger">Opciones</th>
               </tr>
             </thead>
@@ -95,14 +164,14 @@
               <tr>
                 <td scope="row">{{ p.id }}</td>
                 <td>{{ p.nombre }}</td>
+                <td>{{ p.categoria.nombre }}</td>
                 <td>{{ p.descripcion }}</td>
-                {% if p.cantidad > 0 %}
-                <td>{{ p.cantidad }}</td>
+                {% if p.inventario.stock_actual > 0 %}
+                <td>{{ p.inventario.stock_actual }}</td>
                 {% else %}
                 <td><span class="text-danger">Agotado</span></td>
                 {% endif %}
                 <td>{{ p.precio|floatformat:0 }}</td>
-                <td>{{ p.categoria }}</td>
                 <td>
                   <a href="{% url 'actualizarproducto' p.id %}" class="btn btn-dark btn-sm">
                     <i class="bi bi-pencil"></i>

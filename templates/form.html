@@ -4,7 +4,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Registrar Producto</title>
+    <title>{{ titulo }}</title>
+    <!-- Usamos el título dinámico -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
     <!-- FontAwesome para iconos -->
     <link
@@ -15,13 +16,14 @@
   <body>
     <div class="container my-4">
       <!-- Título -->
-      <h1 class="mt-4 mb-4">Registrar Producto</h1>
+      <h1 class="mt-4 mb-4">{{ titulo }}</h1>
+      <!-- Usamos el título dinámico -->
 
       <!-- Card del formulario -->
       <div class="card">
         <div class="card-header">
-          <i class="fas fa-plus-circle me-1"></i> Formulario para Registrar
-          Producto
+          <i class="{{ icono }} me-1"></i> {{ titulo }}
+          <!-- Usamos el título dinámico -->
         </div>
         <div class="card-body bg-light">
           <form method="POST" action="" enctype="multipart/form-data">
