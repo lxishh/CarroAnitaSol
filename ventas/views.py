@@ -6,7 +6,7 @@ from .forms import VentaForm, DetalleVentaForm
 
 def agregar_venta(request):
     DetalleVentaFormSet = modelformset_factory(DetalleVenta, form=DetalleVentaForm, extra=1, can_delete=True)
-    
+
     if request.method == 'POST':
         venta_form = VentaForm(request.POST)
         detalle_formset = DetalleVentaFormSet(request.POST)
@@ -19,42 +19,54 @@ def agregar_venta(request):
 
             # Guardar los detalles de la venta
             for form in detalle_formset:
-                detalle = form.save(commit=False)
-                detalle.venta = venta
+                if form.is_valid():  # Aseguramos que cada formulario sea válido
+                    detalle = form.save(commit=False)
+                    detalle.venta = venta
 
-                # Recuperar el precio unitario desde el producto
-                if detalle.producto:
-                    detalle.precio_unitario = detalle.producto.precio  # Suponiendo que el precio está en el modelo Producto
+                    # Recuperar el precio unitario desde el producto
+                    if detalle.producto:
+                        detalle.precio_unitario = detalle.producto.precio  # Suponiendo que el precio está en el modelo Producto
 
-                # Verificar stock
-                inventario = Inventario.objects.get(producto=detalle.producto)
-                if inventario.stock_actual < detalle.cantidad:
-                    venta.delete()  # Deshacer la venta
-                    return render(request, 'agregar_venta.html', {
-                        'venta_form': venta_form,
-                        'detalle_formset': detalle_formset,
-                        'error': f"Stock insuficiente para {detalle.producto.nombre}.",
-                    })
-                
-                # Actualizar stock
-                inventario.stock_actual -= detalle.cantidad
-                inventario.save()
+                    # Verificar stock
+                    try:
+                        inventario = Inventario.objects.get(producto=detalle.producto)
+                        if inventario.stock_actual < detalle.cantidad:
+                            venta.delete()  # Deshacer la venta
+                            return render(request, 'agregar_venta.html', {
+                                'venta_form': venta_form,
+                                'detalle_formset': detalle_formset,
+                                'error': f"Stock insuficiente para {detalle.producto.nombre}.",
+                            })
+                        
+                        # Actualizar stock
+                        inventario.stock_actual -= detalle.cantidad
+                        inventario.save()
 
-                # Calcular total de la venta
-                venta.total += detalle.cantidad * detalle.precio_unitario
-                detalle.save()
+                        # Calcular total de la venta
+                        venta.total += detalle.cantidad * detalle.precio_unitario
+                        detalle.save()
+
+                    except Inventario.DoesNotExist:
+                        # Si el producto no existe en inventario
+                        venta.delete()  # Deshacer la venta
+                        return render(request, 'agregar_venta.html', {
+                            'venta_form': venta_form,
+                            'detalle_formset': detalle_formset,
+                            'error': f"No se encuentra inventario para {detalle.producto.nombre}.",
+                        })
 
             venta.save()  # Guardar el total final
             return redirect('ventas')  # Redirigir a la lista de ventas
 
     else:
         venta_form = VentaForm()
-        detalle_formset = DetalleVentaFormSet(queryset=DetalleVenta.objects.none())
+        detalle_formset = DetalleVentaFormSet(queryset=DetalleVenta.objects.none())  # Formset vacío al cargar
 
     return render(request, 'agregar_venta.html', {
         'venta_form': venta_form,
         'detalle_formset': detalle_formset,
     })
+
 
 
 

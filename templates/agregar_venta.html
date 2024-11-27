@@ -39,6 +39,7 @@
             <!-- Detalles de Productos -->
             <h2 class="mt-4">Detalles de Productos</h2>
             {{ detalle_formset.management_form }}
+
             <table class="table table-bordered">
               <thead class="thead-dark">
                 <tr>
@@ -46,9 +47,9 @@
                   <th>Cantidad</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="detalle-venta-formset">
                 {% for form in detalle_formset %}
-                <tr>
+                <tr class="detalle-form-row">
                   <td>{{ form.producto }}</td>
                   <td>{{ form.cantidad }}</td>
                 </tr>
@@ -58,10 +59,13 @@
 
             <!-- Botones de acción -->
             <div class="d-flex justify-content-between mt-4">
+              <a href="{% url 'ventas' %}" class="btn btn-danger">Cancelar</a>
+              <button type="button" class="btn btn-dark" id="agregar-producto">
+                Agregar Producto
+              </button>
               <button type="submit" class="btn btn-success">
                 Registrar Venta
               </button>
-              <a href="{% url 'ventas' %}" class="btn btn-danger">Cancelar</a>
             </div>
           </form>
         </div>
@@ -70,5 +74,43 @@
 
     <!-- Bootstrap JS -->
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+    <script>
+      document
+        .getElementById("agregar-producto")
+        .addEventListener("click", function () {
+          var formCount = document.getElementById("id_form-TOTAL_FORMS");
+          var currentFormCount = parseInt(formCount.value);
+
+          // Clonar el primer formulario
+          var formRow = document.querySelector(".detalle-form-row");
+          var newFormRow = formRow.cloneNode(true);
+
+          // Actualizar los índices de los formularios
+          newFormRow
+            .querySelectorAll("input, select")
+            .forEach(function (input) {
+              // Actualizar name
+              var name = input.getAttribute("name");
+              var newName = name.replace("-0-", "-" + currentFormCount + "-");
+              input.setAttribute("name", newName);
+
+              // Actualizar id
+              var newId = "id_" + newName; // Usamos el mismo nuevo índice para id
+              input.setAttribute("id", newId);
+
+              // Limpiar el valor para el nuevo formulario
+              input.value = "";
+            });
+
+          // Insertar el nuevo formulario
+          document
+            .getElementById("detalle-venta-formset")
+            .appendChild(newFormRow);
+
+          // Actualizar el campo TOTAL_FORMS
+          formCount.value = currentFormCount + 1;
+        });
+    </script>
   </body>
 </html>
