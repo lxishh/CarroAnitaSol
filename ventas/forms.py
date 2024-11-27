@@ -4,9 +4,10 @@ from .models import Venta, DetalleVenta
 class VentaForm(forms.ModelForm):
     class Meta:
         model = Venta
-        fields = ['vendedora', 'fecha', 'total']
+        fields = ['vendedora']  # Incluimos solo los campos que el usuario debe llenar.
+
 
 class DetalleVentaForm(forms.ModelForm):
     class Meta:
         model = DetalleVenta
-        fields = ['venta', 'producto', 'cantidad', 'precio_unitario']
+        fields = ['producto', 'cantidad']  # Eliminamos el precio_unitario del formulario

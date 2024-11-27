@@ -14,8 +14,9 @@ class FormularioProducto(forms.ModelForm):
 
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
-        # Verifica si ya existe un producto con el mismo nombre
-        if Producto.objects.filter(nombre=nombre).exists():
+        # Verifica si ya existe un producto con el mismo nombre, pero que no sea el producto actual
+        producto_id = self.instance.id if self.instance.id else None
+        if Producto.objects.filter(nombre=nombre).exclude(id=producto_id).exists():
             raise forms.ValidationError('Ya existe un producto con este nombre.')
         return nombre
 
