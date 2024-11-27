@@ -7,4 +7,4 @@ def index(request):
 
 @login_required
 def opciones(request):
-    return render(request, 'opciones.html')
+    return render(request, 'menuopciones.html')

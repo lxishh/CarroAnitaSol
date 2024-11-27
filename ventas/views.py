@@ -29,7 +29,8 @@ def crear_venta(request):
 # Listar todas las ventas
 def listar_ventas(request):
     ventas = Venta.objects.all()
-    return render(request, 'ventas/listar_ventas.html', {'ventas': ventas})
+    context = {'ventas':ventas}
+    return render(request, 'ventas.html')
 
 # Ver los detalles de una venta
 def ver_venta(request, pk):
