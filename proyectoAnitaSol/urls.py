@@ -25,6 +25,8 @@ urlpatterns = [
     #usuarios (django, login, logout)
     path('usuarios/', include('django.contrib.auth.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='authenticate/login.html'), name='login'),
+    #usar las urls de la app usuarios
+    path('usuarios/', include('usuarios.urls')),
     #usar las urls de la app productos
     path('productos/', include('productos.urls')),
     #usar las urls de la app ventas
