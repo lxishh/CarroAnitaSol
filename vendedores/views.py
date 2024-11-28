@@ -5,9 +5,14 @@ from .forms import ActualizarPerfilUsuarioForm, ActualizarUsuarioForm, CrearUsua
 
 from django.contrib import messages
 
+from django.contrib.auth.decorators import login_required
+from usuarios.utils import rol_requerido
+
 
 #usuario/propietaria/vendedora
 
+@login_required
+@rol_requerido('Propietaria')
 # Create
 def crear_vendedor(request):
     form = CrearUsuarioForm()
@@ -22,12 +27,16 @@ def crear_vendedor(request):
     return render(request, 'form.html', context)
 
 
+@login_required
+@rol_requerido('Propietaria')
 # Read
 def listar_vendedores(request):
     usuarios = Usuario.objects.all()
     context = {'usuarios': usuarios}
     return render(request, 'vendedores.html', context)
 
+@login_required
+@rol_requerido('Propietaria')
 def actualizar_vendedor(request, id):
     usuario = Usuario.objects.get(id=id)  # Obtener el perfil de usuario
     user = usuario.usuario  # Obtener el usuario asociado
@@ -62,7 +71,8 @@ def actualizar_vendedor(request, id):
     return render(request, 'form_actualizar.html', context)
 
 
-
+@login_required
+@rol_requerido('Propietaria')
 #delete
 def eliminar_vendedor(request, id):
     try:

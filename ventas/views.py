@@ -6,6 +6,9 @@ from .forms import VentaForm, DetalleVentaForm
 from django.db.models import Sum
 from django.db.models.functions import TruncDay, TruncWeek, TruncMonth
 
+from django.contrib.auth.decorators import login_required
+from usuarios.utils import rol_requerido
+
 
 def agregar_venta(request):
     DetalleVentaFormSet = modelformset_factory(DetalleVenta, form=DetalleVentaForm, extra=1, can_delete=True)
@@ -100,6 +103,8 @@ from django.db.models import Sum
 from django.db.models.functions import TruncDay, TruncWeek, TruncMonth
 from django.shortcuts import render
 
+@login_required
+@rol_requerido('Propietaria')
 def ingresos(request):
     # Ingresos totales por día
     ingresos_dia = Venta.objects.annotate(dia=TruncDay('fecha')).values('dia').annotate(total=Sum('total'))
