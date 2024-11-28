@@ -99,13 +99,13 @@
         <div class="text-end">
           <i class="bi bi-person-fill" style="color: black; margin-right: 5px; font-size: 2.5rem;"></i> 
           <strong>
-            {% if rol == 'Propietaria' %}
+            {% if user.usuario.rol == 'Propietaria' %}
               Propietaria
-            {% elif rol == 'Vendedora' %}
+            {% elif user.usuario.rol == 'Vendedora'%}
               Vendedora
             {% elif user.is_superuser %}
               Administrador
-            {% else %}
+            {% else %} 
               Usuario
             {% endif %}
           </strong>

@@ -29,50 +29,61 @@
   </head>
   <body>
  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'menuopciones' %}">Inicio</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <!-- OPCIONES QUE HAY EN LA NAV BAR -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'productos' %}">Productos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'ventas' %}">Ventas</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'vendedores' %}">Vendedores</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'ingresos' %}">Ingresos</a>
-          </li>
-        </ul>
-        <div class="d-flex">
-
-<!-- if para SOLO MOSTRAR esta OPCION EN el html de la CATEGORIA -->
-<!-- Para eso es importante cambiar la ==url  de en donde se quiere mostrar (el link que aparece arriba en la categoria)) -->
-          {% if request.path == '/ventas/listado/' %}  
-<!-- Aqui se debe cambiar la url del href dependiendo de donde queremos redirigirnos -->
-            <a class="btn btn-outline-light btn-sm me-2" href="{% url 'menuopciones' %}">Ejemplo</a>
-          </li>
-          {% endif %}
-          <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
-        </div>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'menuopciones' %}">Inicio</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- OPCIONES QUE HAY EN LA NAV BAR -->
+      {% if user.usuario.rol == 'Propietaria' %}
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'productos' %}">Productos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'ventas' %}">Ventas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'vendedores' %}">Vendedores</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'ingresos' %}">Ingresos</a>
+        </li>
+      </ul>
+      <div class="d-flex">
+        <!-- Solo mostrar esta opción en el html de productos -->
+        {% if request.path == '/productos/listado/' %}  
+        <!-- (Aqui se debe cambiar la url en donde se quiere mostrar) -->
+          <a class="btn btn-outline-light btn-sm me-2" href="{% url 'registrarcategoria' %}">Agregar Categoria</a>
+          <!-- Aqui se debe cambiar la url del href dependiendo de donde queremos redirigirnos -->
+        </li>
+        {% endif %}
+        <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+      {% else %}
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'productos' %}">Productos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'ventas' %}">Ventas</a>
+      </ul>
+      <div class="d-flex">
+        <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
       </div>
+      {% endif %}
     </div>
-  </nav>
+  </div>
+</nav>
 
     <div class="container my-4">
       <!-- Logo y cabecera -->
@@ -101,13 +112,13 @@
         <div class="text-end">
           <i class="bi bi-person-fill" style="color: black; margin-right: 5px; font-size: 2.5rem;"></i> 
           <strong>
-            {% if rol == 'Propietaria' %}
+            {% if user.usuario.rol == 'Propietaria' %}
               Propietaria
-            {% elif rol == 'Vendedora' %}
+            {% elif user.usuario.rol == 'Vendedora'%}
               Vendedora
             {% elif user.is_superuser %}
               Administrador
-            {% else %}
+            {% else %} 
               Usuario
             {% endif %}
           </strong>
@@ -139,6 +150,7 @@
             <th class="table-danger">Vendedora</th>
             <th class="table-danger">Fecha</th>
             <th class="table-danger">Total</th>
+            <th class="table-danger">Opciones</th>
           </tr>
         </thead>
         <tbody>
@@ -148,6 +160,12 @@
               <td>{{ venta.vendedor }}</td>
               <td>{{ venta.fecha }}</td>
               <td>{{ venta.total|floatformat:0 }}</td>
+              <td>
+                <!-- Botón para alternar la visibilidad de los detalles -->
+                <button class="btn btn-dark btn-sm" onclick="toggleDetails('{{ venta.id }}')">
+                  <i class="bi bi-eye"></i> Ver Detalles
+                </button>
+              </td>
             </tr>
             <!-- Fila oculta para los detalles de la venta -->
             <tr id="details-{{ venta.id }}" class="details-row" style="display:none;">

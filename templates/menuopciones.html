@@ -24,6 +24,7 @@
 
     <!-- Opciones -->
     <div class="d-flex flex-column align-items-center">
+      {% if user.usuario.rol == 'Propietaria' %}
       <a
         href="{% url 'productos' %}"
         class="alert alert-info text-center w-50 mb-3"
@@ -48,6 +49,23 @@
       <a href="{% url 'logout' %}" class="alert alert-danger text-center w-50">
         <strong>Cerrar Sesión</strong>
       </a>
+      {% else %}
+      <a
+        href="{% url 'productos' %}"
+        class="alert alert-info text-center w-50 mb-3"
+      >
+        <strong>Productos</strong>
+      </a>
+      <a
+        href="{% url 'ventas' %}"
+        class="alert alert-info text-center w-50 mb-3"
+      >
+        <strong>Ventas</strong>
+      </a>
+      <a href="{% url 'logout' %}" class="alert alert-danger text-center w-50">
+        <strong>Cerrar Sesión</strong>
+      </a>
+      {% endif %}
     </div>
     <!-- Cargar Bootstrap JS desde el static -->
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
