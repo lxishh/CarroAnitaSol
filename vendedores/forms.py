@@ -26,3 +26,12 @@ class CrearUsuarioForm(forms.ModelForm):
         if commit:
             usuario.save()
         return usuario
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        rol = cleaned_data.get('rol')
+        fecha_contratacion = cleaned_data.get('fecha_contratacion')
+
+        if rol == 'Vendedora' and not fecha_contratacion:
+            raise forms.ValidationError("La fecha de contratación es obligatoria para las vendedoras.")
+        return cleaned_data

@@ -100,13 +100,13 @@ RECORDAR CAMBIAR EN ENLACE QUE APARECE LUEGO DE LOS == EN EL REQUEST PATH -->
         <div class="text-end">
           <i class="bi bi-person-fill" style="color: black; margin-right: 5px; font-size: 2.5rem;"></i> 
           <strong>
-            {% if rol == 'Propietaria' %}
+            {% if user.usuario.rol == 'Propietaria' %}
               Propietaria
-            {% elif rol == 'Vendedora' %}
+            {% elif user.usuario.rol == 'Vendedora'%}
               Vendedora
             {% elif user.is_superuser %}
               Administrador
-            {% else %}
+            {% else %} 
               Usuario
             {% endif %}
           </strong>
@@ -153,6 +153,7 @@ RECORDAR CAMBIAR EN ENLACE QUE APARECE LUEGO DE LOS == EN EL REQUEST PATH -->
               <tr>
                 <th class="table-danger">ID</th>
                 <th class="table-danger">Nombre</th>
+                <th class="table-danger">Rol</th>
                 <th class="table-danger">Teléfono </th>
                 <th class="table-danger">Email</th>
                 <th class="table-danger">Fecha de Contratación</th>
@@ -166,12 +167,22 @@ RECORDAR CAMBIAR EN ENLACE QUE APARECE LUEGO DE LOS == EN EL REQUEST PATH -->
               <tr>
                 <td>{{ u.id }}</td>
                 <td>{{ u.usuario.username }}</td>
+                <td>{{ u.rol }}</td>
                 <td>{{ u.telefono }}</td>
                 <td>{{ u.usuario.email }}</td>
+                {% if not u.fecha_contratacion %}
+                <td>No definida</td>
+                {% else %}
                 <td>{{ u.fecha_contratacion }}</td>
+                {% endif %}
                 <td>{{ u.ingresos_totales }}</td>
                 <td>
-                 
+                  <a href="{% url 'actualizarvendedor' u.id %}" class="btn btn-dark btn-sm">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <button class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#confirmModal" onclick="setDeleteUrl('{{ u.id }}')">
+                    <i class="bi bi-trash"></i>
+                  </button>
                 </td>
               </tr>
               {% endfor %}
@@ -204,7 +215,7 @@ RECORDAR CAMBIAR EN ENLACE QUE APARECE LUEGO DE LOS == EN EL REQUEST PATH -->
     <script>
       function setDeleteUrl(id) {
 // CAMBIAR URL (USAR MISMO FORMATO QUE EXISTE EN LAS URLS)
-        var url = "/productos/eliminar/" + id;
+        var url = "/vendedores/eliminar/" + id;
         document.getElementById("confirmDeleteButton").setAttribute("href", url);
       }
     </script>
