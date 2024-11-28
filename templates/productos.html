@@ -81,6 +81,7 @@
           <!-- Solo mostrar esta opción en el html de productos -->
           {% if request.path == '/productos/listado/' %}  
           <!-- (Aqui se debe cambiar la url en donde se quiere mostrar) -->
+            <a class="btn btn-outline-light btn-sm me-2" href="{% url 'registrarinventario' %}">Ajustar Stock</a>
             <a class="btn btn-outline-light btn-sm me-2" href="{% url 'registrarcategoria' %}">Agregar Categoria</a>
             <!-- Aqui se debe cambiar la url del href dependiendo de donde queremos redirigirnos -->
           </li>

@@ -84,3 +84,24 @@ def registrar_categoria(request):
             return render(request, 'form.html', {'form': form})
     context = {'form':form, 'titulo': 'Registrar Categoria', 'icono': 'fas fa-plus-circle'}
     return render(request, 'form.html', context)
+
+def listar_categorias(request):
+    categorias = Categoria.objects.all()  # Obtener todas las categorías
+    context = {'categorias': categorias}
+    return render(request, 'categorias.html', context)
+
+def actualizar_categoria(request, id):
+    categoria = Categoria.objects.get(id=id)  # Obtener la categoría a actualizar
+    form = FormularioCategoria(instance=categoria)
+    if request.method == 'POST':
+        form = FormularioCategoria(request.POST, instance=categoria)
+        if form.is_valid():
+            form.save()
+            return redirect('categorias')  # Redirige a la página de categorías después de guardar
+    context = {'form': form, 'titulo': 'Actualizar Categoria', 'icono': 'fas fa-edit'}
+    return render(request, 'form.html', context)
+
+def eliminar_categoria(request, id):
+    categoria = Categoria.objects.get(id=id)  # Obtener la categoría a eliminar
+    categoria.delete()
+    return redirect('categorias')  # Redirige a la página de categorías después de eliminar

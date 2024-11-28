@@ -33,4 +33,6 @@ urlpatterns = [
     path('ventas/', include('ventas.urls')),
     #usar las urls de la app vendedores
     path('vendedores/', include('vendedores.urls')),
+    #usar las urls de la app inventario
+    path('vendedores/', include('inventario.urls')),
 ]
