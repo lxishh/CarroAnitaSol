@@ -35,3 +35,36 @@ class CrearUsuarioForm(forms.ModelForm):
         if rol == 'Vendedora' and not fecha_contratacion:
             raise forms.ValidationError("La fecha de contratación es obligatoria para las vendedoras.")
         return cleaned_data
+    
+class ActualizarUsuarioForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+        widgets = {
+            'password': forms.PasswordInput(attrs={'placeholder': 'Deja en blanco si no deseas cambiar la contraseña'})
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Hacer que el campo de la contraseña no sea obligatorio
+        self.fields['password'].required = False
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        
+        if password:  # Si se proporciona una nueva contraseña
+            self.instance.set_password(password)  # Usar set_password para cifrarla
+            self.password_changed = True  # Marcamos que la contraseña ha cambiado
+            print(f"Contraseña cambiada: {password}")  # Imprime en la consola la nueva contraseña (o solo un mensaje)
+            return password
+        else:
+            self.password_changed = False  # Si no se ingresa una nueva contraseña, no ha cambiado
+            return self.instance.password  # Mantener la contraseña actual
+
+
+
+
+class ActualizarPerfilUsuarioForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = ['telefono', 'rol', 'fecha_contratacion', 'ingresos_totales']

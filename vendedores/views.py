@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 
 from vendedores.models import Usuario
-from .forms import CrearUsuarioForm
+from .forms import ActualizarPerfilUsuarioForm, ActualizarUsuarioForm, CrearUsuarioForm
 
 from django.contrib import messages
 
@@ -19,7 +19,7 @@ def crear_vendedor(request):
     else:
         form = CrearUsuarioForm()
     context = {'form':form, 'titulo': 'Registrar Vendedor', 'icono': 'fas fa-plus-circle'}
-    return render(request, 'form_vendedores.html', context)
+    return render(request, 'form.html', context)
 
 
 # Read
@@ -28,25 +28,40 @@ def listar_vendedores(request):
     context = {'usuarios': usuarios}
     return render(request, 'vendedores.html', context)
 
-#Update
 def actualizar_vendedor(request, id):
-    usuario = Usuario.objects.get(id=id)  # Obtener el usuario por su id
-    form = CrearUsuarioForm(instance=usuario)
+    usuario = Usuario.objects.get(id=id)  # Obtener el perfil de usuario
+    user = usuario.usuario  # Obtener el usuario asociado
+
     if request.method == 'POST':
-        form = CrearUsuarioForm(request.POST, instance=usuario)
-        if form.is_valid():
-            form.save()  # Guarda los cambios en el perfil y en el usuario de Django
-            return redirect('vendedores')  # Redirige a la lista de vendedores
+        form_user = ActualizarUsuarioForm(request.POST, instance=user)
+        form_perfil = ActualizarPerfilUsuarioForm(request.POST, instance=usuario)
+
+        if form_user.is_valid() and form_perfil.is_valid():
+            # Verificar si se ha introducido una nueva contraseña
+            nueva_contrasena = form_user.cleaned_data.get('password')
+            if nueva_contrasena:
+                # Si hay una nueva contraseña, cifrarla
+                user.set_password(nueva_contrasena)
+            
+            form_user.save()  # Guardar los cambios del usuario
+            form_perfil.save()  # Guardar los cambios del perfil
+            messages.success(request, 'Vendedor actualizado exitosamente.')
+            return redirect('vendedores')  # Redirigir a la lista de vendedores
+
     else:
-        form = CrearUsuarioForm(instance=usuario)
+        form_user = ActualizarUsuarioForm(instance=user)
+        form_perfil = ActualizarPerfilUsuarioForm(instance=usuario)
 
     context = {
-        'form': form,
+        'form_user': form_user,
+        'form_perfil': form_perfil,
         'titulo': 'Actualizar Vendedor',
         'icono': 'fas fa-edit',
         'usuario': usuario
     }
-    return render(request, 'form_vendedores.html', context)
+    return render(request, 'form_actualizar.html', context)
+
+
 
 #delete
 def eliminar_vendedor(request, id):
