@@ -10,7 +10,6 @@ class Usuario(models.Model):
     ]
     rol = models.CharField(max_length=20, choices=ROL_CHOICES)
     fecha_contratacion = models.DateField(blank=True, null=True)  # Solo aplicable a vendedoras
-    ingresos_totales = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
         return f"{self.usuario.username} ({self.rol})"

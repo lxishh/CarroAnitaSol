@@ -56,7 +56,7 @@
             <a class="nav-link" href="{% url 'vendedores' %}">Vendedores</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'home' %}">Ingresos</a>
+            <a class="nav-link" href="{% url 'ingresos' %}">Ingresos</a>
           </li>
         </ul>
         <div class="d-flex">
@@ -157,7 +157,6 @@ RECORDAR CAMBIAR EN ENLACE QUE APARECE LUEGO DE LOS == EN EL REQUEST PATH -->
                 <th class="table-danger">Teléfono </th>
                 <th class="table-danger">Email</th>
                 <th class="table-danger">Fecha de Contratación</th>
-                <th class="table-danger">Ingresos Totales</th>
                 <th class="table-danger">Opciones</th>
               </tr>
             </thead>
@@ -175,7 +174,6 @@ RECORDAR CAMBIAR EN ENLACE QUE APARECE LUEGO DE LOS == EN EL REQUEST PATH -->
                 {% else %}
                 <td>{{ u.fecha_contratacion }}</td>
                 {% endif %}
-                <td>{{ u.ingresos_totales }}</td>
                 <td>
                   <a href="{% url 'actualizarvendedor' u.id %}" class="btn btn-dark btn-sm">
                     <i class="bi bi-pencil"></i>

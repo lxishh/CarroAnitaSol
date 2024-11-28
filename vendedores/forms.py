@@ -9,7 +9,7 @@ class CrearUsuarioForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ['telefono', 'rol', 'fecha_contratacion', 'ingresos_totales']
+        fields = ['telefono', 'rol', 'fecha_contratacion']
 
     def save(self, commit=True):
         # Crear el usuario de Django
@@ -67,4 +67,4 @@ class ActualizarUsuarioForm(forms.ModelForm):
 class ActualizarPerfilUsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        fields = ['telefono', 'rol', 'fecha_contratacion', 'ingresos_totales']
+        fields = ['telefono', 'rol', 'fecha_contratacion']
