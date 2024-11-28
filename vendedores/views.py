@@ -24,7 +24,7 @@ def crear_vendedor(request):
     else:
         form = CrearUsuarioForm()
     context = {'form':form, 'titulo': 'Registrar Vendedor', 'icono': 'fas fa-plus-circle'}
-    return render(request, 'form.html', context)
+    return render(request, 'form_vendedores.html', context)
 
 
 @login_required

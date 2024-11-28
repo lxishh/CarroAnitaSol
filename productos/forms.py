@@ -1,5 +1,6 @@
 from django import forms
 from productos.models import Producto, Categoria
+import re
 
 class FormularioProducto(forms.ModelForm):
     class Meta:
@@ -14,6 +15,11 @@ class FormularioProducto(forms.ModelForm):
 
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
+
+         # Validación para evitar números en el nombre
+        if any(char.isdigit() for char in nombre):
+            raise forms.ValidationError('El nombre no puede contener números.')
+        
         # Verifica si ya existe un producto con el mismo nombre, pero que no sea el producto actual
         producto_id = self.instance.id if self.instance.id else None
         if Producto.objects.filter(nombre=nombre).exclude(id=producto_id).exists():
@@ -32,6 +38,11 @@ class FormularioCategoria(forms.ModelForm):
     
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
+        
+        # Validación para evitar números en el nombre
+        if any(char.isdigit() for char in nombre):
+            raise forms.ValidationError('El nombre no puede contener números.')
+            
         # Verifica si ya existe una categoría con el mismo nombre
         if Categoria.objects.filter(nombre=nombre).exists():
             raise forms.ValidationError('Esta categoría ya existe.')

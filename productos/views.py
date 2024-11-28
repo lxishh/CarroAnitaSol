@@ -81,7 +81,7 @@ def registrar_categoria(request):
             return redirect('categorias')  # Redirige a la página de productos después de guardar
         else:
             messages.error(request, 'Hubo un error al registrar la categoría.')
-            return render(request, 'form.html', {'form': form})
+            return render(request, 'form_categoria.html', {'form': form})
     context = {'form':form, 'titulo': 'Registrar Categoria', 'icono': 'fas fa-plus-circle'}
     return render(request, 'form_categoria.html', context)
 

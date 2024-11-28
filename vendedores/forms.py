@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Usuario
+import re
+from datetime import date
 
 class CrearUsuarioForm(forms.ModelForm):
     username = forms.CharField(label="Nombre de Usuario", max_length=150)
@@ -10,6 +12,9 @@ class CrearUsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
         fields = ['telefono', 'rol', 'fecha_contratacion']
+        widgets = {
+            'fecha_contratacion': forms.DateInput(attrs={'type': 'date'}),
+        }
 
     def save(self, commit=True):
         # Crear el usuario de Django
@@ -27,6 +32,34 @@ class CrearUsuarioForm(forms.ModelForm):
             usuario.save()
         return usuario
         
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        # Validar que el username no contenga números
+        if re.search(r'\d', username):
+            raise forms.ValidationError("El nombre de usuario no debe contener números.")
+        return username
+
+    def clean_telefono(self):
+        telefono = self.cleaned_data.get('telefono')
+        # Validar que el teléfono comience con 9 y tenga 9 dígitos
+        if not re.match(r'^9\d{8}$', telefono):
+            raise forms.ValidationError("El teléfono debe comenzar con 9 y tener 9 dígitos en total.")
+        return telefono
+
+    def clean_fecha_contratacion(self):
+        fecha_contratacion = self.cleaned_data.get('fecha_contratacion')
+        # Validar que la fecha de contratación no sea superior a la fecha actual
+        if fecha_contratacion and fecha_contratacion > date.today():
+            raise forms.ValidationError("La fecha de contratación no puede ser posterior a la fecha actual.")
+        return fecha_contratacion
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        # Validar que la contraseña tenga al menos 12 caracteres
+        if len(password) < 12:
+            raise forms.ValidationError("La contraseña debe tener al menos 12 caracteres.")
+        return password
+
     def clean(self):
         cleaned_data = super().clean()
         rol = cleaned_data.get('rol')
@@ -55,7 +88,6 @@ class ActualizarUsuarioForm(forms.ModelForm):
         if password:  # Si se proporciona una nueva contraseña
             self.instance.set_password(password)  # Usar set_password para cifrarla
             self.password_changed = True  # Marcamos que la contraseña ha cambiado
-            print(f"Contraseña cambiada: {password}")  # Imprime en la consola la nueva contraseña (o solo un mensaje)
             return password
         else:
             self.password_changed = False  # Si no se ingresa una nueva contraseña, no ha cambiado
