@@ -10,14 +10,14 @@ def registrar_inventario(request):
         form = FormularioInventario(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('inventarios')  # Redirige a la página de inventarios después de guardar
+            return redirect('inventario')  # Redirige a la página de inventarios después de guardar
     context = {'form': form, 'titulo': 'Registrar Inventario', 'icono': 'fas fa-plus-circle'}
-    return render(request, 'form.html', context)
+    return render(request, 'form_inventario.html', context)
 
 def listar_inventarios(request):
     inventarios = Inventario.objects.all()
     context = {'inventarios': inventarios}
-    return render(request, 'inventarios.html', context)
+    return render(request, 'inventario.html', context)
 
 def actualizar_inventario(request, id):
     inventario = Inventario.objects.get(id=id)
@@ -26,14 +26,14 @@ def actualizar_inventario(request, id):
         form = FormularioInventario(request.POST, instance=inventario)
         if form.is_valid():
             form.save()
-            return redirect('inventarios')  # Redirige a la página de inventarios después de guardar
+            return redirect('inventario')  # Redirige a la página de inventarios después de guardar
     context = {'form': form, 'titulo': 'Actualizar Inventario', 'icono': 'fas fa-edit'}
-    return render(request, 'form.html', context)
+    return render(request, 'form_inventario.html', context)
 
 def eliminar_inventario(request, id):
     inventario = Inventario.objects.get(id=id)
     inventario.delete()
-    return redirect('inventarios')  # Redirige a la página de inventarios después de eliminar
+    return redirect('inventario')  # Redirige a la página de inventarios después de eliminar
 
 
 
