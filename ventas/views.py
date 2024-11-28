@@ -3,6 +3,9 @@ from django.forms import modelformset_factory
 from .models import Venta, DetalleVenta
 from inventario.models import Inventario
 from .forms import VentaForm, DetalleVentaForm
+from django.db.models import Sum
+from django.db.models.functions import TruncDay, TruncWeek, TruncMonth
+
 
 def agregar_venta(request):
     DetalleVentaFormSet = modelformset_factory(DetalleVenta, form=DetalleVentaForm, extra=1, can_delete=True)
@@ -89,3 +92,54 @@ def listar_ventas(request):
     
     # Pasar las ventas al template
     return render(request, 'ventas.html', context)
+
+
+
+
+from django.db.models import Sum
+from django.db.models.functions import TruncDay, TruncWeek, TruncMonth
+from django.shortcuts import render
+
+def ingresos(request):
+    # Ingresos totales por día
+    ingresos_dia = Venta.objects.annotate(dia=TruncDay('fecha')).values('dia').annotate(total=Sum('total'))
+
+    # Ingresos totales por semana
+    ingresos_semana = Venta.objects.annotate(semana=TruncWeek('fecha')).values('semana').annotate(total=Sum('total'))
+
+    # Ingresos totales por mes
+    ingresos_mes = Venta.objects.annotate(mes=TruncMonth('fecha')).values('mes').annotate(total=Sum('total'))
+
+    # Total general
+    total_general = Venta.objects.aggregate(total=Sum('total'))['total']
+
+    # Redondear los valores a enteros
+    for ingreso in ingresos_dia:
+        ingreso['total'] = round(ingreso['total'])
+
+    for ingreso in ingresos_semana:
+        ingreso['total'] = round(ingreso['total'])
+
+    for ingreso in ingresos_mes:
+        ingreso['total'] = round(ingreso['total'])
+
+    # Formatear las fechas antes de pasar al template
+    for ingreso in ingresos_dia:
+        ingreso['dia'] = ingreso['dia'].strftime('%d %b %Y')  # Día en formato '28 Nov 2024'
+
+    for ingreso in ingresos_semana:
+        ingreso['semana'] = ingreso['semana'].strftime('%W, %Y')  # Semana en formato '48, 2024'
+
+    for ingreso in ingresos_mes:
+        ingreso['mes'] = ingreso['mes'].strftime('%B %Y')  # Mes en formato 'Noviembre 2024'
+
+    # Pasar los datos al template
+    context = {
+        'ingresos_dia': ingresos_dia,
+        'ingresos_semana': ingresos_semana,
+        'ingresos_mes': ingresos_mes,
+        'total_general': total_general,
+    }
+    return render(request, 'ingresos.html', context)
+
+

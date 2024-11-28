@@ -139,30 +139,16 @@
             <th class="table-danger">Vendedora</th>
             <th class="table-danger">Fecha</th>
             <th class="table-danger">Total</th>
-            <th class="table-danger">Opciones</th>
           </tr>
         </thead>
         <tbody>
           {% for venta in ventas %}
             <tr>
               <td scope="row">{{ venta.id }}</td>
-              <td>{{ venta.vendedora }}</td>
+              <td>{{ venta.vendedor }}</td>
               <td>{{ venta.fecha }}</td>
               <td>{{ venta.total|floatformat:0 }}</td>
-              <td>
-                <a href="{% url 'actualizarproducto' venta.id %}" class="btn btn-dark btn-sm">
-                  <i class="bi bi-pencil"></i>
-                </a>
-                <button class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#confirmModal" onclick="setDeleteUrl('{{ venta.id }}')">
-                  <i class="bi bi-trash"></i>
-                </button>
-                <!-- Botón para alternar la visibilidad de los detalles -->
-                <button class="btn btn-dark btn-sm" onclick="toggleDetails('{{ venta.id }}')">
-                  <i class="bi bi-eye"></i> Ver Detalles
-                </button>
-              </td>
             </tr>
-            
             <!-- Fila oculta para los detalles de la venta -->
             <tr id="details-{{ venta.id }}" class="details-row" style="display:none;">
               <td colspan="5">
@@ -201,34 +187,6 @@
         } else {
           detailsRow.style.display = 'none'; // Oculta los detalles
         }
-      }
-    </script>
-
-    <!-- Modal de confirmación de eliminación -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="confirmModalLabel">Confirmar Eliminación</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            ¿Estás seguro de que deseas eliminar este elemento? Esta acción no se puede deshacer.
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <a id="confirmDeleteButton" href="#" class="btn btn-danger">Eliminar</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-<!-- Script para eliminar NOMBRE-SECCION y activar modal -->
-    <script>
-      function setDeleteUrl(id) {
-// CAMBIAR URL (USAR MISMO FORMATO QUE EXISTE EN LAS URLS)
-        var url = "/productos/eliminar/" + id;
-        document.getElementById("confirmDeleteButton").setAttribute("href", url);
       }
     </script>
 

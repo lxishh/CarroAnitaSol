@@ -1,7 +1,7 @@
 from django.db import models
 from productos.models import Producto
 from django.utils.timezone import now
-from vendedores.models import Usuario 
+from vendedores.models import Usuario
 
 class Venta(models.Model):
     vendedor = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={'rol': 'Vendedora'})
@@ -10,6 +10,12 @@ class Venta(models.Model):
 
     def __str__(self):
         return f"Venta de {self.vendedor.usuario.username} - Total: {self.total}"
+
+    # Método para recalcular el total de la venta
+    def calcular_total(self):
+        total = sum(detalle.subtotal() for detalle in self.detalles.all())
+        self.total = total
+        self.save()  # Guardamos la venta con el nuevo total
 
 class DetalleVenta(models.Model):
     venta = models.ForeignKey(Venta, on_delete=models.CASCADE, related_name='detalles')  # Relación con la venta
@@ -22,3 +28,8 @@ class DetalleVenta(models.Model):
 
     def __str__(self):
         return f"{self.cantidad} x {self.producto.nombre} (Venta #{self.venta.id})"
+
+    # Override del método save para actualizar el total de la venta automáticamente
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Guardar el detalle primero
+        self.venta.calcular_total()  # Recalcular el total de la venta después de guardar el detalle
