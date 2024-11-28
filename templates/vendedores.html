@@ -90,7 +90,7 @@ RECORDAR CAMBIAR EN ENLACE QUE APARECE LUEGO DE LOS == EN EL REQUEST PATH -->
           <!-- Título NOMBRE-SECCION -->
           <h1 class="mb-0">Vendedores</h1>
           <div class="mt-4">
-            <a href="{% url 'registrarproducto' %}" class="btn btn-dark">
+            <a href="{% url 'registrarvendedor' %}" class="btn btn-dark">
               Agregar Vendedor
             </a>
           </div>
@@ -142,46 +142,36 @@ RECORDAR CAMBIAR EN ENLACE QUE APARECE LUEGO DE LOS == EN EL REQUEST PATH -->
           Tabla de Vendedores
         </div>
         <div class="card-body">
-<!-- INPUT PARA BARRA DE BUSQUEDA -->
-          <!-- <input
+          <input
             type="text"
             id="searchInput"
             class="form-control mb-3"
             placeholder="Buscar por nombre"
-          /> -->
-
+          />
           <table id="productosTable" class="table table-striped table-bordered">
             <thead class="table-header">
               <tr>
                 <th class="table-danger">ID</th>
                 <th class="table-danger">Nombre</th>
-                <th class="table-danger">Categoría</th>
-                <th class="table-danger">Descripción</th>
-                <th class="table-danger">Cantidad</th>
-                <th class="table-danger">Precio</th>
+                <th class="table-danger">Teléfono </th>
+                <th class="table-danger">Email</th>
+                <th class="table-danger">Fecha de Contratación</th>
+                <th class="table-danger">Ingresos Totales</th>
                 <th class="table-danger">Opciones</th>
               </tr>
             </thead>
             <tbody>
 <!-- Aqui se debe cambiar el for por NOMBRE-SECCION -->
-              {% for p in productos %}
+              {% for u in usuarios %}
               <tr>
-                <td scope="row">{{ p.id }}</td>
-                <td>{{ p.nombre }}</td>
-                <td>{{ p.categoria.nombre }}</td>
-                <td>{{ p.descripcion }}</td>
-                <td>{{ p.inventario.stock_actual }}</td>
-                <td><span class="text-danger">Agotado</span></td>
-<!-- AGREGAR 'floatformat' para que el precio aparezca como se acostumbra en chile, sin decimales -->
-                <td>{{ p.precio|floatformat:0 }}</td>
-<!-- CAMBIAR HREF DEL BOTON ACTUALIZAR -->
+                <td>{{ u.id }}</td>
+                <td>{{ u.usuario.username }}</td>
+                <td>{{ u.telefono }}</td>
+                <td>{{ u.usuario.email }}</td>
+                <td>{{ u.fecha_contratacion }}</td>
+                <td>{{ u.ingresos_totales }}</td>
                 <td>
-                  <a href="{% url 'actualizarproducto' p.id %}" class="btn btn-dark btn-sm">
-                    <i class="bi bi-pencil"></i>
-                  </a>
-                  <button class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#confirmModal" onclick="setDeleteUrl('{{ p.id }}')">
-                    <i class="bi bi-trash"></i>
-                  </button>
+                 
                 </td>
               </tr>
               {% endfor %}

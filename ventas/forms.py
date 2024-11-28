@@ -4,7 +4,7 @@ from .models import Venta, DetalleVenta
 class VentaForm(forms.ModelForm):
     class Meta:
         model = Venta
-        fields = ['vendedora']  # Incluimos solo los campos que el usuario debe llenar.
+        fields = ['vendedor']  # Incluimos solo los campos que el usuario debe llenar.
 
 
 class DetalleVentaForm(forms.ModelForm):

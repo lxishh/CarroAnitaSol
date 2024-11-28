@@ -1,7 +1,0 @@
-{% block content %}
-<h1>Actualizar Venta #{{ venta.id }}</h1>
-<form method="post">
-  {% csrf_token %} {{ venta_form.as_p }}
-  <button type="submit">Actualizar Venta</button>
-</form>
-{% endblock %}
