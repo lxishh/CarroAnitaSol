@@ -149,7 +149,7 @@
                 {% if i.stock_actual > 0 %}
                 <td>{{ i.stock_actual }}</td>
                 {% else %}
-                <td><span class="text-danger">Agotado</span></td>
+                <td><span class="text-danger">Sin Stock</span></td>
                 {% endif %}
                 <td>
                   <a href="{% url 'actualizarinventario' i.id %}" class="btn btn-dark btn-sm">

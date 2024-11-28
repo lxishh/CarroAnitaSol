@@ -3,6 +3,9 @@ from django.shortcuts import redirect, render
 from inventario.forms import FormularioInventario
 from inventario.models import Inventario
 
+from django.contrib.auth.decorators import login_required
+from usuarios.utils import rol_requerido
+
 # Create your views here.
 def registrar_inventario(request):
     form = FormularioInventario()
