@@ -63,9 +63,7 @@
 <!-- 
 RECORDAR CAMBIAR EN ENLACE QUE APARECE LUEGO DE LOS == EN EL REQUEST PATH -->
           {% if request.path == '/vendedores/listado/' %}  
-<!-- AQUI CAMBIAMOS LO QUE QUERAMOS QUE HAGA ESE BOTON -->
-            <a class="btn btn-outline-light btn-sm me-2" href="{% url 'menuopciones' %}">Ejemplo</a>
-          </li>
+            <!-- <a class="btn btn-outline-light btn-sm me-2" href="{% url 'menuopciones' %}">Ejemplo</a> -->
           {% endif %}
           <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
         </div>

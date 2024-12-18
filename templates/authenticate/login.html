@@ -11,9 +11,9 @@
     <!-- Logo de la empresa -->
     <div class="mb-4 text-center">
       <img
-        src="{% static 'logo.png' %}"
+        src="{% static 'TR.png' %}"
         alt="Logo de la empresa"
-        style="width: 180px; height: auto"
+        style="width: 250px; height: auto"
       />
     </div>
 
@@ -23,7 +23,7 @@
 
       {% if messages %} {% for message in messages%}
       <div
-        class="alert alert-warning alert-dismissible fade show w-50 mx-auto"
+        class="alert alert-warning alert-dismissible fade show w-50 mx-auto text-center"
         role="alert"
       >
         {{ message }}
@@ -50,9 +50,9 @@
         >
         <input
           type="text"
-          class="form-control alert-info"
+          class="form-control alert-info rounded-pill"
           name="username"
-          placeholder="Ingrese su nombre de usuario"
+          placeholder="Ingrese nombre de usuario"
         />
       </div>
       <!-- Campo de contraseña -->
@@ -62,14 +62,14 @@
         >
         <input
           type="password"
-          class="form-control alert-info"
+          class="form-control alert-info rounded-pill"
           name="password"
           placeholder="Ingrese su contraseña"
         />
       </div>
       <!-- Botón de enviar -->
       <div class="text-center">
-        <button type="submit" class="btn btn-info">
+        <button type="submit" class="btn btn-dark mt-3 w-50 py-2 rounded-pill">
           <strong>Ingresar</strong>
         </button>
       </div>

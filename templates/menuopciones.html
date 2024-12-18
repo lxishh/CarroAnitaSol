@@ -11,9 +11,9 @@
     <!-- Logo de la empresa -->
     <div class="mb-4 text-center">
       <img
-        src="{% static 'logo.png' %}"
+        src="{% static 'TR.png' %}"
         alt="Logo de la empresa"
-        style="width: 180px; height: auto"
+        style="width: auto; height: 198.1px"
       />
     </div>
 
@@ -27,42 +27,42 @@
       {% if user.usuario.rol == 'Propietaria' %}
       <a
         href="{% url 'productos' %}"
-        class="alert alert-info text-center w-50 mb-3"
+        class="btn btn-dark text-center w-50 mb-3 py-3 rounded-pill"
       >
         <strong>Productos</strong>
       </a>
       <a
         href="{% url 'ventas' %}"
-        class="alert alert-info text-center w-50 mb-3"
+        class="btn btn-dark text-center w-50 mb-3 py-3 rounded-pill"
       >
         <strong>Ventas</strong>
       </a>
       <a
         href="{% url 'vendedores' %}"
-        class="alert alert-info text-center w-50 mb-3"
+        class="btn btn-dark text-center w-50 mb-3 py-3 rounded-pill"
       >
         <strong>Vendedores</strong>
       </a>
-      <a href="{% url 'ingresos' %}" class="alert alert-info text-center w-50">
+      <a href="{% url 'ingresos' %}" class="btn btn-dark text-center w-50 mb-3 py-3 rounded-pill">
         <strong>Ingresos</strong>
       </a>
-      <a href="{% url 'logout' %}" class="alert alert-danger text-center w-50">
+      <a href="{% url 'logout' %}" class="btn btn-dark text-center w-50 mb-3 py-3 rounded-pill">
         <strong>Cerrar Sesión</strong>
       </a>
       {% else %}
       <a
         href="{% url 'productos' %}"
-        class="alert alert-info text-center w-50 mb-3"
+        class="btn btn-dark text-center w-50 mb-3 py-3 rounded-pill"
       >
         <strong>Productos</strong>
       </a>
       <a
         href="{% url 'ventas' %}"
-        class="alert alert-info text-center w-50 mb-3"
+        class="btn btn-dark text-center w-50 mb-3 py-3 rounded-pill"
       >
         <strong>Ventas</strong>
       </a>
-      <a href="{% url 'logout' %}" class="alert alert-danger text-center w-50">
+      <a href="{% url 'logout' %}" class="btn btn-dark text-center w-50 mb-3 py-3 rounded-pill">
         <strong>Cerrar Sesión</strong>
       </a>
       {% endif %}
