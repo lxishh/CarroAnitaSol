@@ -12,6 +12,23 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
     />
+    <style>
+      /* Cambia el color de los enlaces en el hover */
+      .navbar-nav .nav-link:hover {
+        color: #a85248; /* Cambia el color del texto al rosa */
+      }
+      .btn-outline-light:hover {
+        background-color: #781c1e; /* Cambia el fondo del botón al rosa */
+        color: black; /* Cambia el texto a negro */
+      }
+      .table-custom {
+          background-color: #781c1e !important;
+          color: #ffffff !important;
+      }
+    .navbar-brand:hover {
+        color: #a85248; /* El color de hover (puedes cambiarlo si lo deseas) */
+      }
+    </style>
   </head>
   <body>
     <!-- Navbar -->
@@ -40,10 +57,10 @@
             <a class="nav-link" href="{% url 'ventas' %}">Ventas</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'vendedores' %}">Vendedores</a>
+            <a class="nav-link" href="{% url 'vendedores' %}">Usuarios</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'ingresos' %}">Ingresos</a>
+            <a class="nav-link" href="{% url 'ingresos' %}">Estadísticas</a>
           </li>
         </ul>
         <div class="d-flex">
