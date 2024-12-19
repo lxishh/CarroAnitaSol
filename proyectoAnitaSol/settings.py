@@ -13,6 +13,20 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 from decouple import config
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn="https://09796fc1e3f067d5b1499f730b6b9223@o4508496379904000.ingest.us.sentry.io/4508496410705920",
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for tracing.
+    traces_sample_rate=1.0,
+    _experiments={
+        # Set continuous_profiling_auto_start to True
+        # to automatically start the profiler on when
+        # possible.
+        "continuous_profiling_auto_start": True,
+    },
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -119,11 +133,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Seguridad adicional (OWASP recomendaciones)
-SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=True, cast=bool)  # Redirige a HTTPS
+SECURE_SSL_REDIRECT = config(
+    'SECURE_SSL_REDIRECT', default=True, cast=bool)  # Redirige a HTTPS
 SESSION_COOKIE_SECURE = True  # Cookies de sesión seguras
 CSRF_COOKIE_SECURE = True  # Cookies CSRF seguras
 X_FRAME_OPTIONS = 'DENY'  # Evita el clickjacking
-SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=31536000, cast=int)  # Strict-Transport-Security
+# Strict-Transport-Security
+SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=31536000, cast=int)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 SECURE_BROWSER_XSS_FILTER = True  # Filtro contra ataques XSS
@@ -153,10 +169,10 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-#Cambios importantes:
-#Variables sensibles mediante decouple: SECRET_KEY, DEBUG, ALLOWED_HOSTS, y configuraciones de la base de datos (DB_NAME, DB_USER, etc.) se obtienen de un archivo .env.
-#Cookies seguras: SESSION_COOKIE_SECURE y CSRF_COOKIE_SECURE activadas.
-#Redirección HTTPS: SECURE_SSL_REDIRECT activado para entornos de producción.
-#HSTS: Configuración para habilitar Strict-Transport-Security.
-#Mejoras en contraseñas: Longitud mínima de contraseñas aumentada a 12 caracteres.
-#Protección contra clickjacking: Añadido X_FRAME_OPTIONS = 'DENY'.
+# Cambios importantes:
+# Variables sensibles mediante decouple: SECRET_KEY, DEBUG, ALLOWED_HOSTS, y configuraciones de la base de datos (DB_NAME, DB_USER, etc.) se obtienen de un archivo .env.
+# Cookies seguras: SESSION_COOKIE_SECURE y CSRF_COOKIE_SECURE activadas.
+# Redirección HTTPS: SECURE_SSL_REDIRECT activado para entornos de producción.
+# HSTS: Configuración para habilitar Strict-Transport-Security.
+# Mejoras en contraseñas: Longitud mínima de contraseñas aumentada a 12 caracteres.
+# Protección contra clickjacking: Añadido X_FRAME_OPTIONS = 'DENY'.

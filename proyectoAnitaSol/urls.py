@@ -18,21 +18,27 @@ from django.urls import path, include
 from appCarro import views
 from django.contrib.auth import views as auth_views
 
+
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='home'),
     path('menu/opciones', views.opciones, name='menuopciones'),
-    #usuarios (django, login, logout)
+    # usuarios (django, login, logout)
     path('usuarios/', include('django.contrib.auth.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='authenticate/login.html'), name='login'),
-    #usar las urls de la app usuarios
+    # usar las urls de la app usuarios
     path('usuarios/', include('usuarios.urls')),
-    #usar las urls de la app productos
+    # usar las urls de la app productos
     path('productos/', include('productos.urls')),
-    #usar las urls de la app ventas
+    # usar las urls de la app ventas
     path('ventas/', include('ventas.urls')),
-    #usar las urls de la app vendedores
+    # usar las urls de la app vendedores
     path('vendedores/', include('vendedores.urls')),
-    #usar las urls de la app inventario
+    # usar las urls de la app inventario
     path('inventario/', include('inventario.urls')),
+    path('sentry-debug/', trigger_error),
 ]
