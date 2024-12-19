@@ -162,7 +162,7 @@
             <tr>
               <td scope="row">{{ venta.id }}</td>
               <td>{{ venta.vendedor }}</td>
-              <td>{{ venta.fecha }}</td>
+              <td>{{ venta.fecha|date:"d/m/Y" }}</td>
               <td>{{ venta.total|floatformat:0 }}</td>
               <td>
                 <!-- Botón para alternar la visibilidad de los detalles -->
@@ -188,8 +188,8 @@
                       <tr>
                         <td>{{ detalle.producto.nombre }}</td>
                         <td>{{ detalle.cantidad }}</td>
-                        <td>{{ detalle.precio_unitario }}</td>
-                        <td>{{ detalle.subtotal }}</td>
+                        <td>{{ detalle.precio_unitario|floatformat:0 }}</td>
+                        <td>{{ detalle.subtotal|floatformat:0 }}</td>
                       </tr>
                     {% endfor %}
                   </tbody>

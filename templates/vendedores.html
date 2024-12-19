@@ -174,7 +174,7 @@ RECORDAR CAMBIAR EN ENLACE QUE APARECE LUEGO DE LOS == EN EL REQUEST PATH -->
                 {% if not u.fecha_contratacion %}
                 <td>No definida</td>
                 {% else %}
-                <td>{{ u.fecha_contratacion }}</td>
+                <td>{{ u.fecha_contratacion|date:"d/m/Y" }}</td>
                 {% endif %}
                 <td>
                   <a href="{% url 'actualizarvendedor' u.id %}" class="btn btn-dark btn-sm">

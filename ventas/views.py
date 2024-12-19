@@ -1,3 +1,5 @@
+import locale
+from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.forms import modelformset_factory
 from .models import Venta, DetalleVenta
@@ -11,7 +13,8 @@ from usuarios.utils import rol_requerido
 
 
 def agregar_venta(request):
-    DetalleVentaFormSet = modelformset_factory(DetalleVenta, form=DetalleVentaForm, extra=1, can_delete=True)
+    DetalleVentaFormSet = modelformset_factory(
+        DetalleVenta, form=DetalleVentaForm, extra=1, can_delete=True)
 
     if request.method == 'POST':
         venta_form = VentaForm(request.POST)
@@ -31,11 +34,13 @@ def agregar_venta(request):
 
                     # Recuperar el precio unitario desde el producto
                     if detalle.producto:
-                        detalle.precio_unitario = detalle.producto.precio  # Suponiendo que el precio está en el modelo Producto
+                        # Suponiendo que el precio está en el modelo Producto
+                        detalle.precio_unitario = detalle.producto.precio
 
                     # Verificar stock
                     try:
-                        inventario = Inventario.objects.get(producto=detalle.producto)
+                        inventario = Inventario.objects.get(
+                            producto=detalle.producto)
                         if inventario.stock_actual < detalle.cantidad:
                             venta.delete()  # Deshacer la venta
                             return render(request, 'agregar_venta.html', {
@@ -43,7 +48,7 @@ def agregar_venta(request):
                                 'detalle_formset': detalle_formset,
                                 'error': f"Stock insuficiente para {detalle.producto.nombre}.",
                             })
-                        
+
                         # Actualizar stock
                         inventario.stock_actual -= detalle.cantidad
                         inventario.save()
@@ -66,7 +71,8 @@ def agregar_venta(request):
 
     else:
         venta_form = VentaForm()
-        detalle_formset = DetalleVentaFormSet(queryset=DetalleVenta.objects.none())  # Formset vacío al cargar
+        detalle_formset = DetalleVentaFormSet(
+            queryset=DetalleVenta.objects.none())  # Formset vacío al cargar
 
     return render(request, 'agregar_venta.html', {
         'venta_form': venta_form,
@@ -74,9 +80,7 @@ def agregar_venta(request):
     })
 
 
-
-
-#read
+# read
 def listar_ventas(request):
     # Obtener todas las ventas
     ventas = Venta.objects.all()
@@ -90,30 +94,29 @@ def listar_ventas(request):
     elif fecha == 'desc':
         ventas = ventas.order_by('-fecha')  # Descendente
 
-
     context = {'ventas': ventas}
-    
+
     # Pasar las ventas al template
     return render(request, 'ventas.html', context)
 
 
+locale.setlocale(locale.LC_TIME, 'Spanish_Spain.1252')
 
-
-from django.db.models import Sum
-from django.db.models.functions import TruncDay, TruncWeek, TruncMonth
-from django.shortcuts import render
 
 @login_required
 @rol_requerido('Propietaria')
 def ingresos(request):
     # Ingresos totales por día
-    ingresos_dia = Venta.objects.annotate(dia=TruncDay('fecha')).values('dia').annotate(total=Sum('total'))
+    ingresos_dia = Venta.objects.annotate(dia=TruncDay(
+        'fecha')).values('dia').annotate(total=Sum('total'))
 
     # Ingresos totales por semana
-    ingresos_semana = Venta.objects.annotate(semana=TruncWeek('fecha')).values('semana').annotate(total=Sum('total'))
+    ingresos_semana = Venta.objects.annotate(semana=TruncWeek(
+        'fecha')).values('semana').annotate(total=Sum('total'))
 
     # Ingresos totales por mes
-    ingresos_mes = Venta.objects.annotate(mes=TruncMonth('fecha')).values('mes').annotate(total=Sum('total'))
+    ingresos_mes = Venta.objects.annotate(mes=TruncMonth(
+        'fecha')).values('mes').annotate(total=Sum('total'))
 
     # Total general
     total_general = Venta.objects.aggregate(total=Sum('total'))['total']
@@ -130,13 +133,20 @@ def ingresos(request):
 
     # Formatear las fechas antes de pasar al template
     for ingreso in ingresos_dia:
-        ingreso['dia'] = ingreso['dia'].strftime('%d %b %Y')  # Día en formato '28 Nov 2024'
+        ingreso['dia'] = ingreso['dia'].strftime(
+            '%d %b %Y').capitalize()  # Día en formato '28 Nov 2024'
 
     for ingreso in ingresos_semana:
-        ingreso['semana'] = ingreso['semana'].strftime('%W, %Y')  # Semana en formato '48, 2024'
+        semana = ingreso['semana'].strftime(
+            '%W, %Y')  # Semana en formato '48, 2024'
+        # Semana 48 2024
+        ingreso['semana'] = f"Semana {semana.split(',')[0]} de {semana.split(',')[1]}"
 
     for ingreso in ingresos_mes:
-        ingreso['mes'] = ingreso['mes'].strftime('%B %Y')  # Mes en formato 'Noviembre 2024'
+        # Mes en formato 'Noviembre 2024'
+        mes = ingreso['mes'].strftime('%B %Y')
+        # Asegurarse de que el mes comience con mayúscula
+        ingreso['mes'] = mes.capitalize()
 
     # Pasar los datos al template
     context = {
@@ -146,5 +156,3 @@ def ingresos(request):
         'total_general': total_general,
     }
     return render(request, 'ingresos.html', context)
-
-
