@@ -4,106 +4,81 @@ from productos.models import Producto, Categoria
 from django.contrib import messages
 
 from vendedores.models import Usuario
-from django.db import connection
 
 # create
 
 
-# Función para ejecutar procedimientos almacenados
-# se define que se debe pasar el nombre del procedimiento y los parametros respectivos
-def ejecutar_procedimiento(proc_nombre, params=()):
-    with connection.cursor() as cursor:
-        cursor.callproc(proc_nombre, params)
-        # Solo obtener resultados si es un SELECT
-        if proc_nombre in ['listar_productos']:
-            return cursor.fetchall()
-        return None
-
-# Vista para listar productos usando el procedimiento almacenado
-
-
-def listar_productos(request):
-    # Ejecutar el procedimiento almacenado
-    productos_raw = ejecutar_procedimiento('listar_productos')
-
-    # Mapear los resultados a un formato adecuado
-    productos = [
-        {
-            'id': p[0],
-            'nombre': p[1],
-            'codigo': p[2],
-            'descripcion': p[3],
-            'precio': p[4],
-            'categoria': p[5],
-            'cantidad': p[6],  # Aquí es donde se obtiene la cantidad
-            'fecha_ingreso': p[7],
-        }
-        for p in productos_raw
-    ]
-
-    # Obtener las categorías para el filtro
-    categorias = Categoria.objects.all()
-
-    # Pasar los productos y las categorías al contexto
-    context = {
-        'productos': productos,
-        'categorias': categorias,
-    }
-
-    return render(request, 'productos.html', context)
-
-
-# Vista para registrar un producto usando el procedimiento almacenado
 def registrar_producto(request):
     form = FormularioProducto()
     if request.method == 'POST':
         form = FormularioProducto(request.POST)
         if form.is_valid():
-            nombre = form.cleaned_data['nombre']
-            codigo = form.cleaned_data['codigo']
-            descripcion = form.cleaned_data['descripcion']
-            cantidad = form.cleaned_data['cantidad']
-            precio = form.cleaned_data['precio']
-            categoria_id = form.cleaned_data['categoria'].id
+            form.save()
+            return redirect('productos')
+    else:
+        form = FormularioProducto()
+    context = {'form': form, 'titulo': 'Registrar Producto',
+               'icono': 'fas fa-plus-circle'}
+    return render(request, 'form.html', context)
 
-            # Incluye el campo código en el procedimiento almacenado
-            ejecutar_procedimiento('registrar_producto', [
-                                   nombre, codigo, descripcion, cantidad, precio, categoria_id])
-            return redirect('/productos')
-
-    context = {'form': form}
-    return render(request, 'registrar_productos.html', context)
+# read: aqui se utiliza categorias (para el filtro) e inventario (para la cantidad que hay en stock)
 
 
-# Vista para actualizar un producto usando el procedimiento almacenado
+def listar_productos(request):
+    try:
+        # Obtener el perfil del usuario relacionado con el usuario autenticado
+        usuario = Usuario.objects.get(usuario=request.user)
+        rol = usuario.rol  # Obtener el rol (Propietaria o Vendedora)
+    except Usuario.DoesNotExist:
+        rol = None  # Si no existe un perfil, asignamos None
+
+    # Obtener todos los productos
+    productos = Producto.objects.select_related('categoria', 'inventario')
+
+    # Filtro por nombre de categoría
+    categoria = request.GET.get('categoria', None)
+
+    # Filtrar productos por nombre de categoría si se especifica
+    if categoria:
+        productos = productos.filter(categoria__nombre=categoria)
+
+    # Obtener las categorías distintas para los filtros
+    categorias = Categoria.objects.values_list('nombre', flat=True).distinct()
+
+    # Pasar los productos y las categorías al contexto
+    context = {
+        'productos': productos,
+        'categorias': categorias,
+        'rol': rol,
+    }
+
+    # Renderizar la página con el contexto
+    return render(request, 'productos.html', context)
+
+# update
+
+
 def actualizar_producto(request, id):
     producto = Producto.objects.get(id=id)
     form = FormularioProducto(instance=producto)
-
     if request.method == 'POST':
         form = FormularioProducto(request.POST, instance=producto)
         if form.is_valid():
-            nombre = form.cleaned_data['nombre']
-            codigo = form.cleaned_data['codigo']
-            descripcion = form.cleaned_data['descripcion']
-            cantidad = form.cleaned_data['cantidad']
-            precio = form.cleaned_data['precio']
-            categoria_id = form.cleaned_data['categoria'].id
+            form.save()
+            return redirect('productos')
+    else:
+        form = FormularioProducto(instance=producto)
+    context = {'form': form, 'titulo': 'Actualizar Producto',
+               'icono': 'fas fa-edit'}
+    return render(request, 'form.html', context)
 
-            # Incluye el campo código en el procedimiento almacenado
-            ejecutar_procedimiento('actualizar_producto', [
-                                   id, nombre, codigo, descripcion, cantidad, precio, categoria_id])
-            return redirect('/productos')
-
-    context = {'form': form}
-    return render(request, 'registrar_productos.html', context)
+# delete
 
 
-# Vista para eliminar un producto usando el procedimiento almacenado
 def eliminar_producto(request, id):
-    # Llamamos al procedimiento almacenado para eliminar el producto
-    ejecutar_procedimiento('eliminar_producto', [id])
-    return redirect('/productos')
+    producto = Producto.objects.get(id=id)
+    producto.delete()
+    return redirect('productos')
 
 
 # categorias
