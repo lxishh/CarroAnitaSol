@@ -42,7 +42,6 @@ class FormularioProducto(forms.ModelForm):
 class FormularioCategoria(forms.ModelForm):
     class Meta:
         model = Categoria
-        # Elimina 'cantidad' porque no existe en el modelo
         fields = ('nombre', 'descripcion',)
         labels = {
             'nombre': 'Nombre de la categoria:',
@@ -51,12 +50,15 @@ class FormularioCategoria(forms.ModelForm):
 
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
+        # Obtiene el ID de la categoría que estamos actualizando
+        categoria_id = self.instance.id
 
         # Validación para evitar números en el nombre
         if any(char.isdigit() for char in nombre):
             raise forms.ValidationError('El nombre no puede contener números.')
 
-        # Verifica si ya existe una categoría con el mismo nombre
-        if Categoria.objects.filter(nombre=nombre).exists():
+        # Verifica si ya existe una categoría con el mismo nombre, pero excluyendo la categoría actual
+        if Categoria.objects.filter(nombre=nombre).exclude(id=categoria_id).exists():
             raise forms.ValidationError('Esta categoría ya existe.')
+
         return nombre

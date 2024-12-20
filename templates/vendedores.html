@@ -172,7 +172,7 @@ RECORDAR CAMBIAR EN ENLACE QUE APARECE LUEGO DE LOS == EN EL REQUEST PATH -->
                 <td>{{ u.telefono }}</td>
                 <td>{{ u.usuario.email }}</td>
                 {% if not u.fecha_contratacion %}
-                <td>No definida</td>
+                <td class="text-danger">No definida</td>
                 {% else %}
                 <td>{{ u.fecha_contratacion|date:"d/m/Y" }}</td>
                 {% endif %}

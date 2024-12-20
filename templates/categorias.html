@@ -142,6 +142,7 @@
               <tr>
                 <th class="table-custom">ID</th>
                 <th class="table-custom">Nombre</th>
+                <th class="table-custom">Descripción</th>
                 <th class="table-custom">Opciones</th>
               </tr>
             </thead>
@@ -150,6 +151,11 @@
               <tr>
                 <td scope="row">{{ c.id }}</td>
                 <td>{{ c.nombre }}</td>
+                {% if not c.descripcion %}
+                <td class="text-danger">No definida</td>
+                {% else %}
+                <td>{{ c.descripcion }}</td>
+                {% endif %}
                 <td>
                   <a href="{% url 'actualizarcategoria' c.id %}" class="btn btn-dark btn-sm">
                     <i class="bi bi-pencil"></i>
