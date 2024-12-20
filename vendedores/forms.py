@@ -12,7 +12,7 @@ class CrearUsuarioForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ['telefono', 'rol', 'fecha_contratacion']
+        fields = ['rut', 'telefono', 'rol', 'fecha_contratacion']
         widgets = {
             'fecha_contratacion': forms.DateInput(attrs={'type': 'date'}),
         }
@@ -113,4 +113,15 @@ class ActualizarUsuarioForm(forms.ModelForm):
 class ActualizarPerfilUsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        fields = ['telefono', 'rol', 'fecha_contratacion']
+        fields = ['rut', 'telefono', 'rol', 'fecha_contratacion']
+
+    def clean_rut(self):
+        rut = self.cleaned_data.get('rut')
+
+        # Validar que el RUT tenga el formato adecuado (8 dígitos seguidos de un guion y un dígito o letra)
+        if not re.match(r'^\d{8}-[0-9A-Za-z]$', rut):
+            raise forms.ValidationError(
+                "El RUT debe tener 8 dígitos, un guion y un número o letra al final. Ejemplo: 12345678-1"
+            )
+
+        return rut
