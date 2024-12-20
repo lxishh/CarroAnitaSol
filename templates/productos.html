@@ -178,10 +178,10 @@
               <tr>
                 <td scope="row">{{ p.codigo }}</td>
                 <td>{{ p.nombre }}</td>
-                <td>{{ p.categoria.nombre }}</td>
+                <td>{{ p.categoria }}</td>
                 <td>{{ p.descripcion }}</td>
-                {% if p.inventario.stock_actual > 0 %}
-                <td>{{ p.inventario.stock_actual }}</td>
+                {% if p.cantidad > 0 %}
+                <td>{{ p.cantidad }}</td>
                 {% else %}
                 <td><span class="text-danger">Agotado</span></td>
                 {% endif %}
