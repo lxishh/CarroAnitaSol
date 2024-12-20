@@ -35,10 +35,17 @@ class CrearUsuarioForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
+
+        # Verificar si el nombre de usuario ya existe en la base de datos
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError(
+                "El nombre de usuario ya está en uso. Por favor, elige otro.")
+
         # Validar que el username no contenga números
         if re.search(r'\d', username):
             raise forms.ValidationError(
                 "El nombre de usuario no debe contener números.")
+
         return username
 
     def clean_telefono(self):

@@ -146,13 +146,19 @@
         </div>
       </form>
       
-      
+      <div class="card mb-4">
+        <div class="card-header">
+          <i class="fas fa-table me-1"></i>
+          Tabla de Ventas
+        </div>
+        <div class="card-body">
+
       <table id="productosTable" class="table table-striped table-bordered">
         <thead class="table-header">
           <tr>
             <th class="table-custom">ID</th>
-            <th class="table-custom">Vendedora</th>
-            <th class="table-custom">Fecha</th>
+            <th class="table-custom">Vendedor(a)</th>
+            <th class="table-custom">Fecha Venta</th>
             <th class="table-custom">Total</th>
             <th class="table-custom">Opciones</th>
           </tr>
@@ -199,6 +205,9 @@
           {% endfor %}
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
 
     <!-- Script para alternar la visibilidad de los detalles -->
     <script>
