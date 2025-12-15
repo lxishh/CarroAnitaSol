@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15 # Versión elegida en el informe
+    container_name: trigorojo-db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env # Archivo con DB_USER, DB_PASSWORD, etc.
+    restart: always # Asegura que se reinicie si falla
+
+  django-web:
+    build: . # Usa tu Dockerfile actual
+    container_name: trigorojo-web
+    command: /bin/bash entrypoint.prod.sh # Comando para ejecutar migraciones/estáticos/Gunicorn
+    depends_on:
+      - db
+    volumes:
+      # Mapea la carpeta de estáticos recolectada por collectstatic 
+      - static_files:/app/staticfiles
+    env_file:
+      - .env # Usamos el mismo archivo para SECRET_KEY, DEBUG, etc.
+
+  frontend-proxy:
+    image: nginx:latest # Usamos la imagen oficial simple (sin el comando de espera que fallaba)
+    ports:
+      - "80:80" # CRÍTICO: Usa el puerto 8080 en tu máquina local
+    volumes:
+      # Monta tu configuración de Nginx
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      # Monta el volumen de estáticos (debe ser el mismo que Django genera)
+      - static_files:/var/www/static 
+    depends_on:
+      - django-web
+
+volumes:
+  # El volumen para los datos persistentes de PostgreSQL
+  postgres_data:
+  
+  # CRÍTICO: Definición del volumen para los archivos estáticos
+  static_files:

@@ -1,0 +1,4 @@
+# Dockerfile.nginx
+FROM nginx:stable-alpine
+# Instala netcat (nc), que se usa para esperar que un puerto esté abierto
+RUN apk add --no-cache netcat-openbsd

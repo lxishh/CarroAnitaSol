@@ -105,7 +105,7 @@ def listar_ventas(request):
     return render(request, 'ventas.html', context)
 
 
-locale.setlocale(locale.LC_TIME, 'Spanish_Spain.1252')
+locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 
 
 @login_required

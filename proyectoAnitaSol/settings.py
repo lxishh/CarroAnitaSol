@@ -30,6 +30,8 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 # Parseo de ALLOWED_HOSTS desde el archivo .env
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 
+# Cargar los orígenes confiables para evitar problemas con Nginx y HTTPS
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='').split(',')
 
 # Application definition
 
@@ -148,6 +150,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+# --- CONFIGURACIÓN CRÍTICA PARA PRODUCCIÓN ---
+# Define la carpeta donde se copiarán todos los estáticos para que Nginx los sirva.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
